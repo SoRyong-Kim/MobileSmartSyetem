@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alarm</title>
+</head>
+<body>
+    <form id="myForm">
+        <h3>라즈베리파이로 만든 기상프로그램</h3>
+        <hr>
+        기상시간을 입력하세요<br>
+        <input type="number" id="hours" name="hours" placeholder="hours">hours<br>
+        <input type="number" id="minutes" name="minutes" placeholder="minutes">minutes<br>
+        <input type="number" id="seconds" name="seconds" placeholder="seconds">seconds<br>
+        <input type="submit" value="Set Alarm">
+    </form>
+    <button id="stopButton">Stop Alarm</button>
+    <p id="message"></p>
+    <p id="soundAlert"></p>
+
+    <h3>Sound Sensor (토픽: sound)</h3>
+    <hr>
+    <form id="subscribe-form-sound">
+        <input type="button" onclick="startSoundMeasurement()" value="측정시작">
+        <input type="button" onclick="stopSoundMeasurement()" value="측정중단">
+    </form>
+    <div id="soundMessages"></div>
+
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var hours = document.getElementById('hours').value;
+            var minutes = document.getElementById('minutes').value;
+            var seconds = document.getElementById('seconds').value;
+            var total_seconds = parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds);
+            document.getElementById('message').innerHTML = '알람이 ' + hours + '시간 ' + minutes + '분 ' + seconds + '초 후에 울립니다.';
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/set_alarm', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send('hours=' + hours + '&minutes=' + minutes + '&seconds=' + seconds);
+        });
+
+        document.getElementById('stopButton').onclick = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", '/stop', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.send();
+        };
+
+        function startSoundMeasurement() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '/start_sound_measurement', true);
+            xhr.send();
+        }
+
+        function stopSoundMeasurement() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '/stop_sound_measurement', true);
+            xhr.send();
+        }
+
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('sound_detected', function() {
+            document.getElementById('soundAlert').innerHTML = '소리가 감지되었습니다.';
+        });
+
+        function updateSoundMessages(sound) {
+            var div = document.getElementById('soundMessages');
+            var p = document.createElement('p');
+            p.innerHTML = '사운드 값: ' + sound;
+            div.appendChild(p);
+
+            // 최근 다섯 개의 메시지만 유지
+            if (div.children.length > 5) {
+                div.removeChild(div.firstChild);
+            }
+        }
+
+        socket.on('sound_measurement', function(sound) {
+            updateSoundMessages(sound);
+        });
+    </script>
+</body>
+</html>
