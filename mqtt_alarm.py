@@ -1,8 +1,7 @@
 # mqtt_alarm.py
 import paho.mqtt.client as mqtt
 import time
-import os
-import circuit
+import sound_detector  # 이 부분을 수정
 
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -22,8 +21,7 @@ client.connect("localhost", 1883, 60)
 client.loop_start()
 
 while True:
-    sound = circuit.measure_sound()  # 사운드 센서로부터 사운드값 읽기
-    client.publish("ultrasonic", sound, qos=0)  # “ultrasonic” 토픽으로 사운드센서 값 전송
+    sound_detector.measure_soundlevel()  # 변경된 부분
     time.sleep(1)
 
 client.loop_stop()
