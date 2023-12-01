@@ -30,5 +30,5 @@ GPIO.setup(trig, GPIO.OUT)  # GPIO20 핀을 출력으로 지정
 GPIO.setup(echo, GPIO.IN)  # GPIO16 핀을 입력으로 지정
 
 # LED를 다루기 위한 전역 변수 선언 및 초기화
-led = 6  # GPIO6
+led = 12  # GPIO6
 GPIO.setup(led, GPIO.OUT)  # GPIO6 핀을 출력으로 지정
