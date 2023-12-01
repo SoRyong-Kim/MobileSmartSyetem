@@ -21,7 +21,8 @@ client.connect("localhost", 1883, 60)
 client.loop_start()
 
 while True:
-    sound_detector.measure_soundlevel()  # 변경된 부분
+    soundlevel = sound_detector.measure_soundlevel()
+    client.publish("sound", soundlevel, qos=0)  # “ultrasonic” 토픽으로 거리 전송
     time.sleep(1)
 
 client.loop_stop()

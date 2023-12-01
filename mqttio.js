@@ -23,7 +23,6 @@ function connect() { // 브로커에 접속하는 함수
 }
 // 브로커로의 접속이 성공할 때 호출되는 함수
 function onConnect() {
-    document.getElementById("messages").innerHTML += '<span>onConnect 실행됨' + '</span><br/>';
     document.getElementById("messages").innerHTML += '<span>connected' + '</span><br/>';
     connectionFlag = true; // 연결 상태로 설정
 }
@@ -33,8 +32,7 @@ function subscribe(topic) {
         return false;
     }
     // 구독 신청하였음을 <div> 영역에 출력
-    document.getElementById("messages").innerHTML += '<span>구독신청: 토픽 1111111111' + topic + '</span><br/>';
-    document.getElementById("messages").innerHTML += '<span>subscribe 실행될 예정' + '</span><br/>';
+    document.getElementById("messages").innerHTML += '<span>구독신청: 토픽' + topic + '</span><br/>';
     client.subscribe(topic); // 브로커에 구독 신청
     document.getElementById("messages").innerHTML += '<span>subscribe 실행됨' + '</span><br/>';
 }
