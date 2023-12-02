@@ -78,6 +78,18 @@
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.send();
         };
+        
+        function startSoundMeasurement() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '/start_sound_measurement', true);
+            xhr.send();
+        }
+
+        function stopSoundMeasurement() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", '/stop_sound_measurement', true);
+            xhr.send();
+        }
     </script>
 </body>
 
