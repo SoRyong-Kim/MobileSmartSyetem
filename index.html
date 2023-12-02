@@ -1,8 +1,21 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Alarm</title>
+    <style>
+        #tmpAlert, #humAlert {
+            position: fixed; /* 고정 위치 */
+            right: 10px; /* 우측으로부터 10px 떨어지게 위치 */
+            top: 10px; /* 상단으로부터 10px 떨어지게 위치 */
+            background-color: skyblue; /* 배경색을 하늘색으로 설정 */
+            color: black; /* 글자색을 검정으로 설정 */
+            padding: 10px; /* 패딩 추가 */
+            border-radius: 5px; /* 모서리 둥글게 */
+        }
+        #humAlert {
+            top: 60px; /* 습도는 온도 아래에 위치하도록 상단으로부터의 거리를 조정 */
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.2/mqttws31.min.js"
         type="text/javascript"></script>
     <script src="./static/mqttio.js" type="text/javascript"></script>
@@ -23,7 +36,7 @@
     <form id="connection-form">
         <b>브로커 IP:</b>
         <input id="broker" type="text" name="broker" value=""><br>
-        <b>포트 번호 : 8080</b><br>
+        <b>포트 번호 : 9001</b><br>
         <input type="button" onclick="connect()" value="Connect">
         <input type="button" onclick="disconnect()" value="Disconnect">
     </form>
@@ -33,22 +46,52 @@
         <input type="number" id="hours" name="hours" placeholder="hours">hours<br>
         <input type="number" id="minutes" name="minutes" placeholder="minutes">minutes<br>
         <input type="number" id="seconds" name="seconds" placeholder="seconds">seconds<br>
-        <input type="submit" onclick="publish('led', 1)" value="Set Alarm">
+        <input type="submit" onclick="publish('led', 0)" value="Set Alarm">
     </form>
     <button id="stopButton" onclick="publish('led', 1)">Stop Alarm</button>
-    <button id="stopButton" onclick="publish('led', 0)">Stop LED</button>
-    <p id="message"></p>
-    <p id="soundAlert"></p>
-    <hr>
 
+    <hr>
+    방의 불을 켜시겠습니까?
+    <label>on <input type="radio" name="led" value="1" onchange="publish('led', this.value)"></label>
+    <label>off <input type="radio" name="led" value="0" checked
+                onchange="publish('led', this.value)"><br></label>
+    <hr>
     <h3>Sound Sensor (토픽: sound)</h3>
     <hr>
+    <h3>온도측정</h3>
+    <form id="tmp-form">
+        <img src="./static/image/온도.jpg" alt="온도" width="30" height="30">
+        <input type="button" onclick="subscribe('tmp')" value="온도 측정시작">
+        <input type="button" onclick="unsubscribe('tmp')" value="측정중단">
+    </form>
+    <hr>
+    <h3>습도측정</h3>
+    <form id="hum-form">
+        <img src="./static/image/습도.jpg" alt="습도" width="30" height="30">
+        <input type="button" onclick="subscribe('hum')" value="습도 측정시작">
+        <input type="button" onclick="unsubscribe('hum')" value="측정중단">
+    </form>
+    <hr>
+    <h3>소리측정</h3>
     <form id="subscribe-form">
         <input type="button" onclick="subscribe('sound')" value="측정시작">
         <input type="button" onclick="unsubscribe('sound')" value="측정중단">
     </form>
     <div id="sound_messages"></div>
     <div id="messages"></div>
+    <p id="message"></p>
+    <p id="soundAlert"></p>
+
+    <p id="tmpAlert"></p>
+    <div id="tmp_messages"></div>
+
+    <p id="humAlert"></p>
+    <div id="hum_messages"></div>
+    <img id="weatherImage" style="position: fixed; right: 10px; top: 160px;">
+    <hr>
+
+    
+    
 
     <script>
         document.getElementById('myForm').addEventListener('submit', function (e) {
@@ -85,5 +128,4 @@
         }
     </script>
 </body>
-
 </html>

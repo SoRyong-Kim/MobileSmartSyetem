@@ -1,3 +1,4 @@
+// mqttio.js
 let client = null; // MQTT 클라이언트의 역할을 하는 Client 객체를 가리키는 전역변수
 let connectionFlag = false; // 연결 상태이면 true
 const CLIENT_ID = "client-" + Math.floor((1 + Math.random()) * 0x10000000000).toString(16) // 사용자 ID 랜덤 생성
@@ -8,8 +9,8 @@ function connect() { // 브로커에 접속하는 함수
     let broker = document.getElementById("broker").value; // 브로커의 IP 주소
     let port = 9001 // mosquitto를 웹소켓으로 접속할 포트 번호
     // id가 message인 DIV 객체에 브로커의 IP와 포트 번호 출력
-    document.getElementById("messages").innerHTML += '<span>접 : ' + broker + ' 포트 ' + port + '</span><br/>';
-    document.getElementById("messages").innerHTML += '<span>용자  : ' + CLIENT_ID + '</span><br/>';
+    document.getElementById("messages").innerHTML += '<span>접속 : ' + broker + ' 포트 ' + port + '</span><br/>';
+    document.getElementById("messages").innerHTML += '<span>사용자  : ' + CLIENT_ID + '</span><br/>';
     // MQTT 메시지 전송 기능을 모두 가징 Paho client 객체 생성
     client = new Paho.MQTT.Client(broker, Number(port), CLIENT_ID);
     // client 객체에 콜백 함수 등록 및 연결
@@ -63,6 +64,28 @@ function onMessageArrived(msg) { // 매개변수 msg는 도착한 MQTT 메시지
     } else {
         // 도착한 메시지 출력
         document.getElementById("sound_messages").innerHTML += '<span>토픽 : ' + msg.destinationName + ' | ' + msg.payloadString + '</span><br/>';
+    }
+
+    if (msg.destinationName == 'tmp') {
+        var tmp = parseFloat(msg.payloadString).toFixed(2);  // 소수점 두 자리까지만 표시
+        document.getElementById("tmpAlert").innerHTML = '현재 온도: ' + tmp;
+    } else {
+        // 도착한 메시지 출력
+        //document.getElementById("tmp_messages").innerHTML += '<span>토픽 : ' + msg.destinationName + ' | ' + msg.payloadString + '</span><br/>';
+    }
+
+    if (msg.destinationName == 'hum') {
+        var hum = parseFloat(msg.payloadString).toFixed(2);  // 소수점 두 자리까지만 표시
+        document.getElementById("humAlert").innerHTML = '현재 습도: ' + hum;
+
+        var weatherImage = document.getElementById("weatherImage");
+        if (hum < 30) {
+            weatherImage.src = "./static/image/맑음.jpg";  // 실제 이미지 경로로 변경해야 함
+        } else if (hum < 70) {
+            weatherImage.src = "./static/image/흐림.jpg";  // 실제 이미지 경로로 변경해야 함
+        } else {
+            weatherImage.src = "./static/image/비.jpg";  // 실제 이미지 경로로 변경해야 함
+        }
     }
 }
 
