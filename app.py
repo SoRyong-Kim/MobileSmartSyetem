@@ -8,21 +8,13 @@ import sound_detector
 from time import sleep  # time 모듈에서 sleep 함수 import
 
 app = Flask(__name__)
-client = mqtt.Client()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/mqtt', methods=['GET', 'POST'])
-def mqtt():
-    # MQTT 브로커에 연결합니다.
-    client.connect("localhost", 1883, 60)
-
-    # 'test' 토픽에 메시지를 발행합니다.
-    client.publish("test", "Hello MQTT")
-
-    return "MQTT route"
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=9001)
 
 def on_connect(client, userdata, flag, rc):
     client.subscribe("led", qos=0)  # "led" 토픽으로 구독 신청
@@ -30,10 +22,11 @@ def on_connect(client, userdata, flag, rc):
 def on_message(client, userdata, msg):
     on_off = int(msg.payload)  # on_off는 0 또는 1의 정수
     sound_detector.controlLED(on_off)  # LED를 켜거나 끔
-
+client = mqtt.Client()
 
 client.on_connect = on_connect
 client.on_message = on_message
+
 
 def play_alarm(total_seconds):
     sleep(total_seconds)
@@ -68,15 +61,3 @@ def stop():
 def start_sound_measurement():
     start_mqtt()
     return 'Sound measurement started.'
-
-@app.route('/stop_sound_measurement', methods=['GET'])
-def stop_sound_measurement():
-    stop_mqtt()
-    return str(sound_data)
-
-@app.route('/get_sound_data', methods=['GET'])
-def get_sound_data():
-    return str(sound_data)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)

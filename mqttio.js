@@ -1,4 +1,3 @@
-// mqttio.js
 let client = null; // MQTT 클라이언트의 역할을 하는 Client 객체를 가리키는 전역변수
 let connectionFlag = false; // 연결 상태이면 true
 const CLIENT_ID = "client-" + Math.floor((1 + Math.random()) * 0x10000000000).toString(16) // 사용자 ID 랜덤 생성
@@ -7,12 +6,10 @@ function connect() { // 브로커에 접속하는 함수
         return; // 현재 연결 상태이므로 다시 연결하지 않음
     // 사용자가 입력한 브로커의 IP 주소와 포트 번호 알아내기
     let broker = document.getElementById("broker").value; // 브로커의 IP 주소
-
-    let port = 8080 // mosquitto를 웹소켓으로 접속할 포트 번호
-    
+    let port = 9001 // mosquitto를 웹소켓으로 접속할 포트 번호
     // id가 message인 DIV 객체에 브로커의 IP와 포트 번호 출력
-    document.getElementById("messages").innerHTML += '<span>접속 : ' + broker + ' 포트 ' + port + '</span><br/>';
-    document.getElementById("messages").innerHTML += '<span>사용자 ID : ' + CLIENT_ID + '</span><br/>';
+    document.getElementById("messages").innerHTML += '<span>접 : ' + broker + ' 포트 ' + port + '</span><br/>';
+    document.getElementById("messages").innerHTML += '<span>용자  : ' + CLIENT_ID + '</span><br/>';
     // MQTT 메시지 전송 기능을 모두 가징 Paho client 객체 생성
     client = new Paho.MQTT.Client(broker, Number(port), CLIENT_ID);
     // client 객체에 콜백 함수 등록 및 연결
@@ -34,9 +31,8 @@ function subscribe(topic) {
         return false;
     }
     // 구독 신청하였음을 <div> 영역에 출력
-    document.getElementById("messages").innerHTML += '<span>구독신청: 토픽' + topic + '</span><br/>';
+    document.getElementById("messages").innerHTML += '<span>구독신청: 토픽 ' + topic + '</span><br/>';
     client.subscribe(topic); // 브로커에 구독 신청
-    document.getElementById("messages").innerHTML += '<span>subscribe 실행됨' + '</span><br/>';
 }
 function publish(topic, msg) {
     if (connectionFlag != true) { // 연결되지 않은 경우
