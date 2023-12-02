@@ -23,7 +23,7 @@
     <form id="connection-form">
         <b>브로커 IP:</b>
         <input id="broker" type="text" name="broker" value=""><br>
-        <b>포트 번호 : 8080</b><br>
+        <b>포트 번호 : 9001</b><br>
         <input type="button" onclick="connect()" value="Connect">
         <input type="button" onclick="disconnect()" value="Disconnect">
     </form>
@@ -33,20 +33,12 @@
         <input type="number" id="hours" name="hours" placeholder="hours">hours<br>
         <input type="number" id="minutes" name="minutes" placeholder="minutes">minutes<br>
         <input type="number" id="seconds" name="seconds" placeholder="seconds">seconds<br>
-        <input type="submit" value="Set Alarm">
+        <input type="submit" onclick="publish('led', 0)" onchange="publish('led', 0)" value="Set Alarm">
     </form>
-    <button id="stopButton">Stop Alarm</button>
+    <button id="stopButton" onclick="publish('led', 1)" onchange="publish('led', 1)" value="1">Stop Alarm</button>
     <p id="message"></p>
     <p id="soundAlert"></p>
-    
     <hr>
-    <h3>Led 제어(토픽:led)</h3>
-    <hr>
-    <form id="LED-control-form">
-        <label>on <input type="radio" name="led" value="1" onchange="publish('led', this.value)"></label>
-        <label>off <input type="radio" name="led" value="0" checked
-                onchange="publish('led', this.value)"><br><br></label>
-    </form>
     <hr>
 
     <h3>Sound Sensor (토픽: sound)</h3>
@@ -78,7 +70,7 @@
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.send();
         };
-        
+
         function startSoundMeasurement() {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", '/start_sound_measurement', true);

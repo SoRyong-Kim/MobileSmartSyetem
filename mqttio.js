@@ -15,6 +15,7 @@ function connect() { // 브로커에 접속하는 함수
     // client 객체에 콜백 함수 등록 및 연결
     client.onConnectionLost = onConnectionLost; // 접속 끊김 시 onConnectLost() 실행
     client.onMessageArrived = onMessageArrived; // 메시지 도착 시 onMessageArrived() 실행
+    client.subscribe("led", qos=0)
     // client 객체에게 브로커에 접속 지시
     client.connect({
         onSuccess: onConnect, // 브로커로부터 접속 응답 시 onConnect() 실행
@@ -39,7 +40,7 @@ function publish(topic, msg) {
         alert("연결되지 않았음");
         return false;
     }
-    client.send(topic, msg, 0, false);
+    client.send(topic, String(msg), 0, false);
 }
 function unsubscribe(topic) {
     if (connectionFlag != true) return; // 연결되지 않은 경우
