@@ -16,16 +16,16 @@ def index():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9001)
 
-def on_connect(client, userdata, flag, rc):
-    client.subscribe("led", qos=0)  # "led" 토픽으로 구독 신청
+# def on_connect(client, userdata, flag, rc):
+#     client.subscribe("led", qos=0)  # "led" 토픽으로 구독 신청
 
-def on_message(client, userdata, msg):
-    on_off = int(msg.payload)  # on_off는 0 또는 1의 정수
-    sound_detector.controlLED(on_off)  # LED를 켜거나 끔
+# def on_message(client, userdata, msg):
+#     on_off = int(msg.payload)  # on_off는 0 또는 1의 정수
+#     sound_detector.controlLED(on_off)  # LED를 켜거나 끔
 client = mqtt.Client()
 
-client.on_connect = on_connect
-client.on_message = on_message
+# client.on_connect = on_connect
+# client.on_message = on_message
 
 
 def play_alarm(total_seconds):

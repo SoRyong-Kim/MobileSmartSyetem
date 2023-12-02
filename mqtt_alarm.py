@@ -4,15 +4,9 @@ import os
 import sound_detector  # sound_detector 모듈 import
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-    client.subscribe("alarm/topic")
     client.subscribe("led", qos=0)  # "led" 토픽으로 구독 신청
 
 def on_message(client, userdata, msg):
-    total_seconds = int(msg.payload.decode())
-    print(f"알람이 {total_seconds} 초 뒤에 알람이 울립니다")
-    time.sleep(total_seconds)
-    os.system('cvlc /home/pi/static/alarm.mp3 --play-and-exit')
     on_off = int(msg.payload)  # on_off는 0 또는 1의 정수
     sound_detector.controlLED(on_off)  # LED를 켜거나 끔 ********************
 
