@@ -6,7 +6,7 @@ function connect() { // 브로커에 접속하는 함수
         return; // 현재 연결 상태이므로 다시 연결하지 않음
     // 사용자가 입력한 브로커의 IP 주소와 포트 번호 알아내기
     let broker = document.getElementById("broker").value; // 브로커의 IP 주소
-    let port = 8080 // mosquitto를 웹소켓으로 접속할 포트 번호
+    let port = 8000 // mosquitto를 웹소켓으로 접속할 포트 번호
     // id가 message인 DIV 객체에 브로커의 IP와 포트 번호 출력
     document.getElementById("messages").innerHTML += '<span>접속 : ' + broker + ' 포트 ' + port + '</span><br/>';
     document.getElementById("messages").innerHTML += '<span>사용자 ID : ' + CLIENT_ID + '</span><br/>';
