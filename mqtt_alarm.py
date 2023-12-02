@@ -31,8 +31,7 @@ client.loop_start()
 
 while True:
     soundlevel = sound_detector.measure_soundlevel()  # 사운드 센서로부터 사운드값 읽기
-    if soundlevel == 1:
-        client.publish("sound", "sound detected")  # “sound” 토픽으로 사운드센서 값 전송
+    client.publish('sound', payload=str(soundlevel))  # 읽은 사운드값을 'sound' 토픽에 publish
     time.sleep(1)
 
 client.loop_stop()

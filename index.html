@@ -23,7 +23,7 @@
     <form id="connection-form">
         <b>브로커 IP:</b>
         <input id="broker" type="text" name="broker" value=""><br>
-        <b>포트 번호 : 9001</b><br>
+        <b>포트 번호 : 8080</b><br>
         <input type="button" onclick="connect()" value="Connect">
         <input type="button" onclick="disconnect()" value="Disconnect">
     </form>
@@ -33,12 +33,12 @@
         <input type="number" id="hours" name="hours" placeholder="hours">hours<br>
         <input type="number" id="minutes" name="minutes" placeholder="minutes">minutes<br>
         <input type="number" id="seconds" name="seconds" placeholder="seconds">seconds<br>
-        <input type="submit" onclick="publish('led', 0)" onchange="publish('led', 0)" value="Set Alarm">
+        <input type="submit" onclick="publish('led', 1)" value="Set Alarm">
     </form>
-    <button id="stopButton" onclick="publish('led', 1)" onchange="publish('led', 1)" value="1">Stop Alarm</button>
+    <button id="stopButton" onclick="publish('led', 1)">Stop Alarm</button>
+    <button id="stopButton" onclick="publish('led', 0)">Stop LED</button>
     <p id="message"></p>
     <p id="soundAlert"></p>
-    <hr>
     <hr>
 
     <h3>Sound Sensor (토픽: sound)</h3>
@@ -47,6 +47,7 @@
         <input type="button" onclick="subscribe('sound')" value="측정시작">
         <input type="button" onclick="unsubscribe('sound')" value="측정중단">
     </form>
+    <div id="sound_messages"></div>
     <div id="messages"></div>
 
     <script>

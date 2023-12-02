@@ -15,8 +15,6 @@ function connect() { // 브로커에 접속하는 함수
     // client 객체에 콜백 함수 등록 및 연결
     client.onConnectionLost = onConnectionLost; // 접속 끊김 시 onConnectLost() 실행
     client.onMessageArrived = onMessageArrived; // 메시지 도착 시 onMessageArrived() 실행
-    client.subscribe("led", qos=0)
-    // client 객체에게 브로커에 접속 지시
     client.connect({
         onSuccess: onConnect, // 브로커로부터 접속 응답 시 onConnect() 실행
     });
@@ -59,9 +57,15 @@ function onConnectionLost(responseObject) { // responseObject는 응답 패킷
 // 메시지가 도착할 때 호출되는 함수
 function onMessageArrived(msg) { // 매개변수 msg는 도착한 MQTT 메시지를 담고 있는 객체
     console.log("onMessageArrived: " + msg.payloadString);
-    // 도착한 메시지 출력
-    document.getElementById("messages").innerHTML += '<span>토픽 : ' + msg.destinationName + ' | ' + msg.payloadString + '</span><br/>';
+    // 'sound' 토픽의 메시지가 도착했을 때, soundAlert 요소에 값을 출력
+    if (msg.destinationName == 'sound') {
+        document.getElementById("soundAlert").innerHTML = '현재 소리 센서 값: ' + msg.payloadString;
+    } else {
+        // 도착한 메시지 출력
+        document.getElementById("sound_messages").innerHTML += '<span>토픽 : ' + msg.destinationName + ' | ' + msg.payloadString + '</span><br/>';
+    }
 }
+
 // disconnection 버튼이 선택되었을 때 호출되는 함수
 function disconnect() {
     if (connectionFlag == false)
